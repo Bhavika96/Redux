@@ -1,5 +1,7 @@
-import { INCREMENT, DECREMENT, LOAD_DATA } from "./action";
+import { INCREMENT, DECREMENT } from "./action";
 import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import TotalList from "./total";
 
 const ProductList = () => {
   const selector = useSelector((state) => {
@@ -9,32 +11,56 @@ const ProductList = () => {
 
   const dispatch = useDispatch();
 
-  const loadData = () => {
-    dispatch({ type: LOAD_DATA, params: "load data" });
+  const increment = (itemId) => {
+    dispatch({ type: INCREMENT, params: { itemId } });
   };
 
-  const increment = () => {
-    dispatch({ type: INCREMENT });
+  const decrement = (itemId) => {
+    dispatch({ type: DECREMENT, params: { itemId } });
   };
 
-  const decrement = () => {
-    dispatch({ type: DECREMENT });
-  };
+  // const increment = (itemId) => ({
+  //   type: "INCREMENT",
+  //   itemId,
+  // });
+
+  // const decrement = (itemId) => ({
+  //   type: "DECREMENT",
+  //   itemId,
+  // });
+
+  const [total, setTotal] = useState(0);
 
   return (
     <>
       <p>Product List</p>
-      {/* <button onClick={loadData}>Add </button> */}
       <ul>
         {selector.map((item) => {
           return (
             <li key={item.id}>
               Title: {item.title}
               Price: {item.price}
+              <button
+                onClick={() => {
+                  increment(item.id);
+                }}
+              >
+                +
+              </button>
+              Quantity: {item.quantity}
+              <button
+                onClick={() => {
+                  decrement(item.id);
+                }}
+              >
+                -
+              </button>
+              Total: {item.price * item.quantity}
             </li>
           );
         })}
       </ul>
+      <TotalList />
     </>
   );
 };
